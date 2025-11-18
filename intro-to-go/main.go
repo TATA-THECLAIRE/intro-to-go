@@ -26,43 +26,43 @@ func IsBalanced(root *TreeNode) bool {
 // checkHeight calculates the height of a tree
 // Returns -1 if the tree is NOT balanced
 // Returns the actual height if the tree IS balanced
-func checkHeight(node *TreeNode) int {
+func checkHeight(node *TreeNode) (int, error) {
 	// Base case: an empty tree has height 0
 	if node == nil {
-		return 0
+		return 0, nil
 	}
-	
+
 	// Check the left subtree
-	leftHeight := checkHeight(node.Left)
-	if leftHeight == -1 {
+	leftHeight, err := checkHeight(node.Left)
+	if err != nil {
 		// Left subtree is not balanced, so this tree isn't either
-		return -1
+		return 0, err
 	}
-	
+
 	// Check the right subtree
-	rightHeight := checkHeight(node.Right)
-	if rightHeight == -1 {
+	rightHeight, err := checkHeight(node.Right)
+	if err != nil {
 		// Right subtree is not balanced, so this tree isn't either
-		return -1
+		return 0, err
 	}
-	
+
 	// Calculate the difference in heights
 	difference := leftHeight - rightHeight
 	if difference < 0 {
 		difference = -difference // Make it positive
 	}
-	
+
 	// If the difference is more than 1, tree is not balanced
 	if difference > 1 {
-		return -1
+		return 0, errors.New("tree is not balanced")
 	}
-	
+
 	// Tree is balanced! Return the height
 	// Height = 1 (current node) + max(left height, right height)
 	if leftHeight > rightHeight {
-		return leftHeight + 1
+		return leftHeight + 1, nil
 	}
-	return rightHeight + 1
+	return rightHeight + 1, nil
 }
 
 // Helper function to create a new node
